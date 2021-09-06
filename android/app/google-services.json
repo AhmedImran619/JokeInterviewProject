@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "866373042144",
+    "project_id": "jokes-interview-project",
+    "storage_bucket": "jokes-interview-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866373042144:android:3cd812d3c3c5228834f585",
+        "android_client_info": {
+          "package_name": "com.rensis.jokes_interview_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "866373042144-cajgbcqdffqjkc6pbdobj0r6fi48lpoq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSyIOjzwqXALurcw8fveq96m3f1obq3oI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "866373042144-cajgbcqdffqjkc6pbdobj0r6fi48lpoq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
