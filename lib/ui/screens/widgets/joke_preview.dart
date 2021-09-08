@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:jokes_interview_project/models/joke.dart';
 
 class JokePreview extends StatelessWidget {
+  final GlobalKey? key;
   final Joke joke;
 
-  JokePreview(this.joke);
+  JokePreview(this.joke, {this.key});
 
   @override
   Widget build(BuildContext context) {

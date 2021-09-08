@@ -5,4 +5,5 @@ class FirebaseKeys {
   static final String like = 'like';
   static final String dislike = 'dislike';
   static final String rating = 'rating';
+  static final String favorites = 'favorites';
 }

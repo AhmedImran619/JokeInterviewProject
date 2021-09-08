@@ -1,8 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:jokes_interview_project/res/static_info.dart';
 
-class Joke {
-  String id, uploaderId, uploaderName, text, fontStyle;
-  int bgColor, textColor, fontSize, likes, dislikes, rating, creationTime;
+class Joke extends Equatable {
+  final String id, uploaderId, uploaderName, text, fontStyle;
+  final int bgColor, textColor, fontSize, likes, dislikes, rating, creationTime;
 
   Joke({
     required this.id,
@@ -85,4 +86,7 @@ class Joke {
       creationTime: this.creationTime,
     );
   }
+
+  @override
+  List<Object?> get props => [this.id, this.uploaderId];
 }

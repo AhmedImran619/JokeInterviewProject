@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:jokes_interview_project/models/joke.dart';
 import 'package:jokes_interview_project/res/firebase_keys.dart';
 import 'package:jokes_interview_project/res/jokes_notifier.dart';
+import 'package:jokes_interview_project/res/static_info.dart';
+import 'package:jokes_interview_project/ui/screens/home/tabs/favorites_tab.dart';
 import 'package:jokes_interview_project/ui/screens/home/tabs/my_jokes_tab.dart';
 import 'package:jokes_interview_project/ui/screens/home/tabs/newsfeed_tab.dart';
 import 'package:jokes_interview_project/ui/screens/home/tabs/profile_tab.dart';
@@ -19,7 +21,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int currentPageIndex = 0;
-  late StreamSubscription streamSubscription;
+  late StreamSubscription jokesSubscription, favoriteSubscription;
 
   @override
   void initState() {
@@ -29,7 +31,7 @@ class _HomeState extends State<Home> {
   }
 
   _init() {
-    streamSubscription = FirebaseFirestore.instance.collection(FirebaseKeys.jokes).snapshots().listen((event) {
+    jokesSubscription = FirebaseFirestore.instance.collection(FirebaseKeys.jokes).snapshots().listen((event) {
       List<Joke> public = [], my = [];
       for (var doc in event.docs) {
         var joke = Joke.fromMap(doc.data());
@@ -39,13 +41,22 @@ class _HomeState extends State<Home> {
           public.add(joke);
       }
 
-      Provider.of<JokesProvider>(context, listen: false).update(my, public);
+      Provider.of<JokesProvider>(context, listen: false).update(my: my, public: public);
+    });
+
+    favoriteSubscription = FirebaseFirestore.instance.collection(FirebaseKeys.users).doc(StaticInfo.currentUser!.id).collection(FirebaseKeys.favorites).snapshots().listen((event) {
+      List<String> fav = [];
+      for(var doc in event.docs)
+        fav.add(doc.id);
+      Provider.of<JokesProvider>(context, listen: false).update(favorite: fav);
+
     });
   }
 
   @override
   void dispose() {
-    streamSubscription.cancel();
+    jokesSubscription.cancel();
+    favoriteSubscription.cancel();
     super.dispose();
   }
 
@@ -56,15 +67,15 @@ class _HomeState extends State<Home> {
         title: Text('Jokes 😂'),
         actions: [IconButton(onPressed: () {}, icon: Icon(Icons.sort_outlined))],
       ),
-      body:  IndexedStack(
-          index: currentPageIndex,
-          children: [
-            NewsfeedTab(),
-            MyJokesTab(),
-            ProfileTab(),
-          ],
-        ),
-
+      body: IndexedStack(
+        index: currentPageIndex,
+        children: [
+          NewsfeedTab(),
+          MyJokesTab(),
+          FavoritesTab(),
+          ProfileTab(),
+        ],
+      ),
       floatingActionButton: currentPageIndex == 1
           ? FloatingActionButton(
               onPressed: () {
@@ -75,9 +86,11 @@ class _HomeState extends State<Home> {
           : null,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentPageIndex,
+        type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.animation), label: 'Newsfeed'),
           BottomNavigationBarItem(icon: Icon(Icons.assignment_ind_outlined), label: 'My Jokes'),
+          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Favorites'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
         onTap: (val) {
